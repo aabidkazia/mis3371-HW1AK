@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!--
+  Program name: thankyou.html
+  Author: Student Name
+  Date created: February 27, 2026
+  Date last edited: February 27, 2026
+  Version: 1.0
+  Description: Confirmation page displayed after successful form submission.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>We'R'Docs Medical – Submission Confirmed</title>
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- HEADER BANNER (same as main page) -->
+<div id="banner">
+  <div id="banner-logo">
+    <svg width="70" height="70" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="35" cy="35" r="33" fill="#0d6efd" stroke="#fff" stroke-width="3"/>
+      <rect x="28" y="16" width="14" height="38" rx="4" fill="#fff"/>
+      <rect x="16" y="28" width="38" height="14" rx="4" fill="#fff"/>
+    </svg>
+  </div>
+  <div id="banner-text">
+    <h1>We'R'Docs Medical Center</h1>
+    <p id="dynamic-date"></p>
+  </div>
+</div>
+
+<!-- THANK YOU MESSAGE -->
+<div id="main-content" style="text-align:center; padding: 60px 32px;">
+  <h2>✔ Thank You for Your Submission!</h2>
+  <p style="margin-top:20px; font-size:1.1rem; color:#1a2840;">
+    Your patient registration has been received.<br>
+    A member of our team will contact you shortly to confirm your appointment.
+  </p>
+  <p style="margin-top:28px;">
+    <a href="patient-form.html">&larr; Return to Registration Form</a>
+  </p>
+</div>
+
+<!-- FOOTER -->
+<div id="footer">
+  <div id="footer-left">
+    <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="14" cy="14" r="13" fill="#0d6efd"/>
+      <rect x="10" y="4"  width="8"  height="20" rx="2" fill="#fff"/>
+      <rect x="4"  y="10" width="20" height="8"  rx="2" fill="#fff"/>
+    </svg>
+    <span class="footer-brand">We'R'Docs Medical</span>
+  </div>
+  <div id="footer-center">
+    <button type="button" onclick="alert('Office: (713) 555-9100');">📞 Contact Us</button>
+    &nbsp;
+    <a href="https://www.facebook.com" target="_blank" rel="noopener">Facebook</a> |
+    <a href="https://www.twitter.com"  target="_blank" rel="noopener">Twitter/X</a>
+  </div>
+  <div id="footer-right">
+    PO BOX 18881<br>Sugar Land, TX 77496<br>
+    &copy; <span id="footer-year"></span> We'R'Docs Medical Center
+  </div>
+</div>
+
+<script>
+  (function() {
+    var days   = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var months = ["January","February","March","April","May","June",
+                  "July","August","September","October","November","December"];
+    var now = new Date();
+    var d = now.getDate();
+    var sfx = (d===1||d===21||d===31)?"st":(d===2||d===22)?"nd":(d===3||d===23)?"rd":"th";
+    document.getElementById("dynamic-date").innerHTML =
+      "Today is: " + days[now.getDay()] + ", " + months[now.getMonth()] + " " + d + sfx + ", " + now.getFullYear();
+    document.getElementById("footer-year").textContent = now.getFullYear();
+  })();
+</script>
+<!-- END OF DOCUMENT: thankyou.html -->
+</body>
+</html>
