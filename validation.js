@@ -1,184 +1,270 @@
 /*
-  Program name: validation.js
-  Author: Student Name
-  Date created: February 27, 2026
-  Date last edited: February 27, 2026
-  Version: 1.0
-  Description: Client-side form validation for patient-form.html.
-               Validates all required fields before allowing form submission.
-               Called via onsubmit event of the patientForm form.
+  validation.js
+  name: (seriously need to fill this in before turning in...)
+
+  handles form validation for patient-form.html
+
+  idea:
+  - check each field one by one
+  - stop as soon as something is wrong
+  - show alert + focus on the problem field
 */
 
-/* ── MAIN VALIDATION CONTROLLER ────────────────────────────────── */
+
+/* ================= MAIN FUNCTION ================= */
 function formValidation() {
-  var frm = document.patientForm;
 
-  // Run each validation in sequence; stop at first failure
-  if (!validateUserID(frm.userid))          return false;
-  if (!validatePassword(frm.passid,
-                        frm.passid2))       return false;
-  if (!validateName(frm.fname, "First Name")) return false;
-  if (!validateName(frm.lname, "Last Name"))  return false;
-  if (!validateDOB(frm.dob))                return false;
-  if (!validateSSN(frm.ssn))                return false;
-  if (!validateAddress(frm.addr1))          return false;
-  if (!validateCity(frm.city))              return false;
-  if (!validateState(frm.state))            return false;
-  if (!validateZip(frm.zip))               return false;
-  if (!validateEmail(frm.email))            return false;
-  if (!validateRadioGroup("gender",        "Please select a gender."))       return false;
-  if (!validateRadioGroup("vaccinated",    "Please indicate vaccination status.")) return false;
-  if (!validateRadioGroup("insurance",     "Please indicate whether you have insurance.")) return false;
-  return true;   // all passed — allow form to submit to thankyou.html
+  var form = document.patientForm; // shortcut
+
+  // go in order (easier to debug this way)
+  if (!checkUser(form.userid)) return false;
+
+  if (!checkPassword(form.passid, form.passid2)) return false;
+
+  if (!checkName(form.fname, "First Name")) return false;
+  if (!checkName(form.lname, "Last Name")) return false;
+
+  if (!checkDOB(form.dob)) return false;
+  if (!checkSSN(form.ssn)) return false;
+
+  if (!checkAddress(form.addr1)) return false;
+  if (!checkCity(form.city)) return false;
+
+  if (!checkState(form.state)) return false;
+  if (!checkZip(form.zip)) return false;
+
+  if (!checkEmail(form.email)) return false;
+
+  // radio buttons
+  if (!checkRadio("gender", "Please select gender")) return false;
+  if (!checkRadio("vaccinated", "Select vaccination status")) return false;
+  if (!checkRadio("insurance", "Select insurance option")) return false;
+
+  // if everything passes
+  return true;
 }
 
-/* ── INDIVIDUAL FIELD VALIDATORS ────────────────────────────────── */
 
-/* User ID: 5–20 alphanumeric characters */
-function validateUserID(field) {
+/* ================= USER ID ================= */
+function checkUser(field) {
+
   var val = field.value.trim();
+
+  // length check first
   if (val.length < 5 || val.length > 20) {
-    alert("User ID must be between 5 and 20 characters.");
+    alert("User ID must be 5–20 characters.");
     field.focus();
     return false;
   }
-  if (!/^[A-Za-z0-9_]+$/.test(val)) {
-    alert("User ID may only contain letters, numbers, and underscores.");
+
+  // only letters + numbers + underscore
+  var pattern = /^[A-Za-z0-9_]+$/;
+
+  if (!pattern.test(val)) {
+    alert("User ID can only use letters, numbers, or _");
     field.focus();
     return false;
   }
+
   return true;
 }
 
-/* Password: min 7 chars, must match re-enter */
-function validatePassword(passField, pass2Field) {
-  var p1 = passField.value;
-  var p2 = pass2Field.value;
+
+/* ================= PASSWORD ================= */
+function checkPassword(p1Field, p2Field) {
+
+  var p1 = p1Field.value;
+  var p2 = p2Field.value;
+
   if (p1.length < 7) {
-    alert("Password must be at least 7 characters long.");
-    passField.focus();
+    alert("Password must be at least 7 characters.");
+    p1Field.focus();
     return false;
   }
+
+  // comparing both
   if (p1 !== p2) {
-    alert("Passwords do not match. Please re-enter.");
-    pass2Field.focus();
+    alert("Passwords do not match.");
+    p2Field.focus();
     return false;
   }
+
   return true;
 }
 
-/* Name fields: letters, spaces, hyphens only */
-function validateName(field, label) {
+
+/* ================= NAME ================= */
+function checkName(field, label) {
+
   var val = field.value.trim();
-  if (val.length === 0) {
+
+  if (val === "") {
     alert(label + " is required.");
     field.focus();
     return false;
   }
+
+  // allows letters, spaces, hyphens, apostrophes
   if (!/^[A-Za-z\s\-']+$/.test(val)) {
-    alert(label + " must contain only letters, spaces, hyphens, or apostrophes.");
+    alert(label + " has invalid characters.");
     field.focus();
     return false;
   }
+
   return true;
 }
 
-/* Date of Birth: MM/DD/YYYY */
-function validateDOB(field) {
+
+/* ================= DOB ================= */
+function checkDOB(field) {
+
   var val = field.value.trim();
-  if (val.length === 0) {
-    alert("Date of Birth is required.");
+
+  if (val === "") {
+    alert("DOB is required.");
     field.focus();
     return false;
   }
-  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(val)) {
-    alert("Date of Birth must be in MM/DD/YYYY format.");
+
+  // basic format check only (not checking real date)
+  var re = /^\d{2}\/\d{2}\/\d{4}$/;
+
+  if (!re.test(val)) {
+    alert("Use MM/DD/YYYY format.");
     field.focus();
     return false;
   }
+
   return true;
 }
 
-/* SSN: not empty (content is masked) */
-function validateSSN(field) {
+
+/* ================= SSN ================= */
+function checkSSN(field) {
+
   var val = field.value.trim();
+
+  // not super strict here
   if (val.length < 9) {
-    alert("Social Security Number is required (9–11 characters).");
+    alert("SSN seems too short.");
     field.focus();
     return false;
   }
+
   return true;
 }
 
-/* Address: alphanumeric + spaces + common punctuation */
-function validateAddress(field) {
+
+/* ================= ADDRESS ================= */
+function checkAddress(field) {
+
   var val = field.value.trim();
+
   if (val.length === 0) {
-    alert("Address Line 1 is required.");
+    alert("Address is required.");
     field.focus();
     return false;
   }
+
+  // could add regex here but skipping for now
   return true;
 }
 
-/* City: letters and spaces only */
-function validateCity(field) {
+
+/* ================= CITY ================= */
+function checkCity(field) {
+
   var val = field.value.trim();
-  if (val.length === 0) {
+
+  if (val === "") {
     alert("City is required.");
     field.focus();
     return false;
   }
-  if (!/^[A-Za-z\s\-\.]+$/.test(val)) {
-    alert("City must contain only letters and spaces.");
+
+  // simple check
+  var re = /^[A-Za-z\s\-\.]+$/;
+
+  if (!re.test(val)) {
+    alert("City looks invalid.");
     field.focus();
     return false;
   }
+
   return true;
 }
 
-/* State: must not be blank */
-function validateState(field) {
-  if (field.value === "" || field.value === null) {
+
+/* ================= STATE ================= */
+function checkState(field) {
+
+  // dropdown check
+  if (field.value === "" || field.value == null) {
     alert("Please select a state.");
     field.focus();
     return false;
   }
+
   return true;
 }
 
-/* ZIP: 5-digit or ZIP+4 (NNNNN or NNNNN-NNNN) */
-function validateZip(field) {
+
+/* ================= ZIP ================= */
+function checkZip(field) {
+
   var val = field.value.trim();
-  if (!/^\d{5}(-\d{4})?$/.test(val)) {
-    alert("ZIP Code must be 5 digits (e.g. 77496) or ZIP+4 (e.g. 77496-1234).");
+
+  var zipPattern = /^\d{5}(-\d{4})?$/;
+
+  if (!zipPattern.test(val)) {
+    alert("Invalid ZIP code.");
     field.focus();
     return false;
   }
+
   return true;
 }
 
-/* Email: standard format name@domain.tld */
-function validateEmail(field) {
+
+/* ================= EMAIL ================= */
+function checkEmail(field) {
+
   var val = field.value.trim();
-  var re  = /^\w+([\.\-]?\w+)*@\w+([\.\-]?\w+)*(\.\w{2,})+$/;
+
+  // copied from somewhere (works though)
+  var re = /^\w+([\.\-]?\w+)*@\w+([\.\-]?\w+)*(\.\w{2,})+$/;
+
   if (!re.test(val)) {
-    alert("Please enter a valid email address (name@domain.tld).");
+    alert("Enter a valid email.");
     field.focus();
     return false;
   }
+
   return true;
 }
 
-/* Radio group: at least one option selected */
-function validateRadioGroup(name, message) {
+
+/* ================= RADIO ================= */
+function checkRadio(name, msg) {
+
   var radios = document.getElementsByName(name);
+
+  // loop through options
   for (var i = 0; i < radios.length; i++) {
-    if (radios[i].checked) return true;
+    if (radios[i].checked) {
+      return true;
+    }
   }
-  alert(message);
-  if (radios.length > 0) radios[0].focus();
+
+  alert(msg);
+
+  // focus first one (not perfect but works)
+  if (radios.length > 0) {
+    radios[0].focus();
+  }
+
   return false;
 }
 
-/* ── END OF VALIDATION.JS ────────────────────────────────────────── */
+
+/* end of file */
