@@ -1,364 +1,291 @@
 <!DOCTYPE html>
 <!--
-  Program name: patient-form.html
-  Author: Student Name
-  Date created: February 27, 2026
-  Date last edited: February 27, 2026
-  Version: 1.0
-  Description: Patient Registration Form for We'R'Docs Medical Center.
-               Captures patient demographic data, medical history, insurance info,
-               and account credentials. Includes full client-side JS validation.
+  patient-form.html
+  Name: (forgot to update this tbh)
+  Class project – Patient Registration Form
+
+  Notes:
+  - uses validation.js for checking inputs
+  - still tweaking some UI stuff
 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>We'R'Docs Medical – Patient Registration</title>
-  <link href="style.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
   <script src="validation.js"></script>
 </head>
 
-<body onload="document.patientForm.userid.focus();">
+<!-- I moved focus logic into a function instead of inline -->
+<body onload="initPage();">
 
-<!-- ============================================================
-     HEADER / BANNER SECTION
-     ============================================================ -->
+<script>
+  function initPage() {
+    // set cursor to first field when page loads
+    if (document.patientForm && document.patientForm.userid) {
+      document.patientForm.userid.focus();
+    }
+
+    updateDateStuff(); // also update date + footer
+  }
+</script>
+
+<!-- ================= HEADER ================= -->
 <div id="banner">
   <div id="banner-logo">
-    <!-- Inline SVG logo — no external file reference -->
-    <svg width="70" height="70" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg" aria-label="We'R'Docs Medical Logo">
+    <!-- kept svg inline so I don't have to deal with image paths -->
+    <svg width="70" height="70" viewBox="0 0 70 70">
       <circle cx="35" cy="35" r="33" fill="#0d6efd" stroke="#fff" stroke-width="3"/>
       <rect x="28" y="16" width="14" height="38" rx="4" fill="#fff"/>
       <rect x="16" y="28" width="38" height="14" rx="4" fill="#fff"/>
     </svg>
   </div>
+
   <div id="banner-text">
     <h1>We'R'Docs Medical Center</h1>
-    <p id="dynamic-date"><!-- filled by JS --></p>
+    <p id="dynamic-date"></p> <!-- JS fills this -->
   </div>
-</div><!-- end #banner -->
+</div>
 
-<!-- ============================================================
-     MAIN CONTENT / FORM SECTION
-     ============================================================ -->
+<!-- ================= MAIN ================= -->
 <div id="main-content">
   <h2>New Patient Registration Form</h2>
-  <p class="form-intro">Please complete all required fields (<span class="required-star">*</span> = required). Use the <kbd>Tab</kbd> key to move between fields.</p>
 
-  <!-- Form — no method; submit goes to thankyou.html -->
+  <p class="form-intro">
+    Fill out all required fields (<span class="required-star">*</span>).
+    Tip: use Tab key to move faster.
+  </p>
+
   <form name="patientForm" onsubmit="return formValidation();" action="thankyou.html">
 
-    <!-- ── ACCOUNT CREDENTIALS ───────────────────────────── -->
+    <!-- ACCOUNT -->
     <fieldset>
       <legend>Account Credentials</legend>
-      <table class="form-table">
-        <tr>
-          <td class="label-cell"><label for="userid">User ID <span class="required-star">*</span></label></td>
-          <td><input type="text" id="userid" name="userid" maxlength="20" size="22"
-               placeholder="5–20 characters" tabindex="1">
-          <span class="hint">Separate from your email. 5–20 characters.</span></td>
-        </tr>
-        <tr>
-          <td class="label-cell"><label for="passid">Password <span class="required-star">*</span></label></td>
-          <td><input type="password" id="passid" name="passid" maxlength="30" size="22"
-               placeholder="Min 7 characters" tabindex="2"></td>
-        </tr>
-        <tr>
-          <td class="label-cell"><label for="passid2">Re-enter Password <span class="required-star">*</span></label></td>
-          <td><input type="password" id="passid2" name="passid2" maxlength="30" size="22"
-               placeholder="Must match above" tabindex="3"></td>
-        </tr>
-      </table>
-    </fieldset>
 
-    <!-- ── PERSONAL INFORMATION ──────────────────────────── -->
-    <fieldset>
-      <legend>Personal Information</legend>
       <table class="form-table">
         <tr>
-          <td class="label-cell"><label for="fname">First Name <span class="required-star">*</span></label></td>
+          <td class="label-cell">User ID *</td>
           <td>
-            <input type="text" id="fname" name="fname" maxlength="30" size="22"
-                   placeholder="First Name" tabindex="4">
-            &nbsp;
-            <label for="mi">MI</label>
-            <input type="text" id="mi" name="mi" maxlength="1" size="2"
-                   placeholder="M" tabindex="5" style="width:2.5em;">
-            &nbsp;
-            <label for="lname">Last Name <span class="required-star">*</span></label>
-            <input type="text" id="lname" name="lname" maxlength="30" size="22"
-                   placeholder="Last Name" tabindex="6">
+            <input type="text" id="userid" name="userid"
+                   maxlength="20" placeholder="5–20 characters" tabindex="1">
+            <span class="hint">Don't use your email here</span>
           </td>
         </tr>
+
         <tr>
-          <td class="label-cell"><label for="dob">Date of Birth <span class="required-star">*</span></label></td>
-          <td><input type="text" id="dob" name="dob" maxlength="10" size="12"
-               placeholder="MM/DD/YYYY" tabindex="7"></td>
+          <td>Password *</td>
+          <td>
+            <input type="password" id="passid" name="passid"
+                   placeholder="min 7 chars" tabindex="2">
+          </td>
         </tr>
+
         <tr>
-          <td class="label-cell"><label for="ssn">Social Security # <span class="required-star">*</span></label></td>
-          <td><input type="password" id="ssn" name="ssn" maxlength="11" size="14"
-               placeholder="XXX-XX-XXXX" tabindex="8">
-          <span class="hint">Obscured for security. Format: XXX-XX-XXXX</span></td>
-        </tr>
-        <tr>
-          <td class="label-cell"><label for="phone">Phone Number</label></td>
-          <td><input type="text" id="phone" name="phone" maxlength="14" size="16"
-               placeholder="(713) 555-1234" tabindex="9"></td>
-        </tr>
-        <tr>
-          <td class="label-cell"><label for="email">Email Address <span class="required-star">*</span></label></td>
-          <td><input type="text" id="email" name="email" maxlength="80" size="34"
-               placeholder="name@domain.com" tabindex="10"></td>
+          <td>Re-enter *</td>
+          <td>
+            <input type="password" id="passid2" name="passid2"
+                   placeholder="match password" tabindex="3">
+          </td>
         </tr>
       </table>
     </fieldset>
 
-    <!-- ── ADDRESS ────────────────────────────────────────── -->
+    <!-- PERSONAL INFO -->
+    <fieldset>
+      <legend>Personal Info</legend>
+
+      <table class="form-table">
+        <tr>
+          <td>Name *</td>
+          <td>
+            <input type="text" id="fname" name="fname"
+                   placeholder="First" tabindex="4">
+
+            <!-- middle initial (not sure if ppl still use this lol) -->
+            <input type="text" id="mi" name="mi"
+                   maxlength="1" size="2" tabindex="5">
+
+            <input type="text" id="lname" name="lname"
+                   placeholder="Last" tabindex="6">
+          </td>
+        </tr>
+
+        <tr>
+          <td>DOB *</td>
+          <td>
+            <input type="text" id="dob" name="dob"
+                   placeholder="MM/DD/YYYY" tabindex="7">
+          </td>
+        </tr>
+
+        <tr>
+          <td>SSN *</td>
+          <td>
+            <input type="password" id="ssn" name="ssn"
+                   placeholder="XXX-XX-XXXX" tabindex="8">
+            <span class="hint">hidden for privacy</span>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Phone</td>
+          <td>
+            <input type="text" id="phone" name="phone"
+                   placeholder="(713) 555-1234" tabindex="9">
+          </td>
+        </tr>
+
+        <tr>
+          <td>Email *</td>
+          <td>
+            <input type="text" id="email" name="email"
+                   placeholder="name@email.com" tabindex="10">
+          </td>
+        </tr>
+      </table>
+    </fieldset>
+
+    <!-- ADDRESS -->
     <fieldset>
       <legend>Address</legend>
+
       <table class="form-table">
         <tr>
-          <td class="label-cell"><label for="addr1">Address Line 1 <span class="required-star">*</span></label></td>
-          <td><input type="text" id="addr1" name="addr1" maxlength="30" size="34"
-               placeholder="Street address" tabindex="11"></td>
-        </tr>
-        <tr>
-          <td class="label-cell"><label for="addr2">Address Line 2</label></td>
-          <td><input type="text" id="addr2" name="addr2" maxlength="30" size="34"
-               placeholder="Apt, Suite, Unit (optional)" tabindex="12"></td>
-        </tr>
-        <tr>
-          <td class="label-cell"><label for="city">City <span class="required-star">*</span></label></td>
+          <td>Address *</td>
           <td>
-            <input type="text" id="city" name="city" maxlength="30" size="22"
+            <input type="text" id="addr1" name="addr1"
+                   placeholder="Street address" tabindex="11">
+          </td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td>
+            <input type="text" id="addr2" name="addr2"
+                   placeholder="Apt / Unit" tabindex="12">
+          </td>
+        </tr>
+
+        <tr>
+          <td>City / State *</td>
+          <td>
+            <input type="text" id="city" name="city"
                    placeholder="City" tabindex="13">
-            &nbsp;
-            <label for="state">State <span class="required-star">*</span></label>
+
             <select id="state" name="state" tabindex="14">
-              <option value="">(Select State)</option>
-              <option value="AL">AL – Alabama</option>
-              <option value="AK">AK – Alaska</option>
-              <option value="AZ">AZ – Arizona</option>
-              <option value="AR">AR – Arkansas</option>
-              <option value="CA">CA – California</option>
-              <option value="CO">CO – Colorado</option>
-              <option value="CT">CT – Connecticut</option>
-              <option value="DE">DE – Delaware</option>
-              <option value="DC">DC – District of Columbia</option>
-              <option value="FL">FL – Florida</option>
-              <option value="GA">GA – Georgia</option>
-              <option value="HI">HI – Hawaii</option>
-              <option value="ID">ID – Idaho</option>
-              <option value="IL">IL – Illinois</option>
-              <option value="IN">IN – Indiana</option>
-              <option value="IA">IA – Iowa</option>
-              <option value="KS">KS – Kansas</option>
-              <option value="KY">KY – Kentucky</option>
-              <option value="LA">LA – Louisiana</option>
-              <option value="ME">ME – Maine</option>
-              <option value="MD">MD – Maryland</option>
-              <option value="MA">MA – Massachusetts</option>
-              <option value="MI">MI – Michigan</option>
-              <option value="MN">MN – Minnesota</option>
-              <option value="MS">MS – Mississippi</option>
-              <option value="MO">MO – Missouri</option>
-              <option value="MT">MT – Montana</option>
-              <option value="NE">NE – Nebraska</option>
-              <option value="NV">NV – Nevada</option>
-              <option value="NH">NH – New Hampshire</option>
-              <option value="NJ">NJ – New Jersey</option>
-              <option value="NM">NM – New Mexico</option>
-              <option value="NY">NY – New York</option>
-              <option value="NC">NC – North Carolina</option>
-              <option value="ND">ND – North Dakota</option>
-              <option value="OH">OH – Ohio</option>
-              <option value="OK">OK – Oklahoma</option>
-              <option value="OR">OR – Oregon</option>
-              <option value="PA">PA – Pennsylvania</option>
-              <option value="PR">PR – Puerto Rico</option>
-              <option value="RI">RI – Rhode Island</option>
-              <option value="SC">SC – South Carolina</option>
-              <option value="SD">SD – South Dakota</option>
-              <option value="TN">TN – Tennessee</option>
-              <option value="TX" selected>TX – Texas</option>
-              <option value="UT">UT – Utah</option>
-              <option value="VT">VT – Vermont</option>
-              <option value="VA">VA – Virginia</option>
-              <option value="WA">WA – Washington</option>
-              <option value="WV">WV – West Virginia</option>
-              <option value="WI">WI – Wisconsin</option>
-              <option value="WY">WY – Wyoming</option>
+              <option value="">Select</option>
+              <option value="TX" selected>TX</option>
+              <option value="CA">CA</option>
+              <option value="NY">NY</option>
+              <!-- TODO: add full list later -->
             </select>
-            &nbsp;
-            <label for="zip">ZIP <span class="required-star">*</span></label>
-            <input type="text" id="zip" name="zip" maxlength="10" size="10"
-                   placeholder="77496" tabindex="15">
+
+            <input type="text" id="zip" name="zip"
+                   placeholder="ZIP" tabindex="15">
           </td>
         </tr>
       </table>
     </fieldset>
 
-    <!-- ── MEDICAL HISTORY (Checkboxes) ──────────────────── -->
+    <!-- HEALTH QUESTIONS -->
     <fieldset>
-      <legend>Medical History</legend>
-      <p class="section-label">Check all previous illnesses / vaccinations that apply:</p>
-      <table class="form-table">
-        <tr>
-          <td class="label-cell">Previous Conditions</td>
-          <td>
-            <label><input type="checkbox" name="hx_chickenpox"  value="chickenpox"> Chicken Pox</label>&nbsp;&nbsp;
-            <label><input type="checkbox" name="hx_measles"     value="measles">    Measles</label>&nbsp;&nbsp;
-            <label><input type="checkbox" name="hx_covid"       value="covid">      COVID-19</label>&nbsp;&nbsp;
-            <label><input type="checkbox" name="hx_smallpox"    value="smallpox">   Small Pox</label>&nbsp;&nbsp;
-            <label><input type="checkbox" name="hx_tetanus"     value="tetanus">    Tetanus Shot</label>&nbsp;&nbsp;
-            <label><input type="checkbox" name="hx_flu"         value="flu">        Annual Flu Shot</label>&nbsp;&nbsp;
-            <label><input type="checkbox" name="hx_hepb"        value="hepb">       Hepatitis B</label>
-          </td>
-        </tr>
-      </table>
+      <legend>General Health</legend>
+
+      <p>Answer a few quick questions:</p>
+
+      Gender *:
+      <label><input type="radio" name="gender"> Male</label>
+      <label><input type="radio" name="gender"> Female</label>
+      <label><input type="radio" name="gender"> Other</label>
+
+      <br><br>
+
+      Vaccinated *:
+      <label><input type="radio" name="vaccinated"> Yes</label>
+      <label><input type="radio" name="vaccinated"> No</label>
     </fieldset>
 
-    <!-- ── RADIO BUTTONS ─────────────────────────────────── -->
+    <!-- SLIDER -->
     <fieldset>
-      <legend>General Health Questions</legend>
-      <table class="form-table">
-        <!-- Gender -->
-        <tr>
-          <td class="label-cell">Gender <span class="required-star">*</span></td>
-          <td>
-            <label><input type="radio" name="gender" value="male"   tabindex="16"> Male</label>&nbsp;&nbsp;
-            <label><input type="radio" name="gender" value="female" tabindex="17"> Female</label>&nbsp;&nbsp;
-            <label><input type="radio" name="gender" value="other"  tabindex="18"> Other / Prefer not to say</label>
-          </td>
-        </tr>
-        <!-- Vaccinated -->
-        <tr>
-          <td class="label-cell">Fully Vaccinated? <span class="required-star">*</span></td>
-          <td>
-            <label><input type="radio" name="vaccinated" value="yes" tabindex="19"> Yes</label>&nbsp;&nbsp;
-            <label><input type="radio" name="vaccinated" value="no"  tabindex="20"> No</label>
-          </td>
-        </tr>
-        <!-- Insurance -->
-        <tr>
-          <td class="label-cell">Do you have insurance? <span class="required-star">*</span></td>
-          <td>
-            <label><input type="radio" name="insurance" value="yes" tabindex="21"> Yes</label>&nbsp;&nbsp;
-            <label><input type="radio" name="insurance" value="no"  tabindex="22"> No</label>
-          </td>
-        </tr>
-        <!-- Primary Doctor -->
-        <tr>
-          <td class="label-cell">Do you have a primary care doctor?</td>
-          <td>
-            <label><input type="radio" name="hasPCP" value="yes" tabindex="23"> Yes</label>&nbsp;&nbsp;
-            <label><input type="radio" name="hasPCP" value="no"  tabindex="24"> No</label>&nbsp;&nbsp;
-            <label><input type="radio" name="hasPCP" value="seeking" tabindex="25"> Seeking one</label>
-          </td>
-        </tr>
-      </table>
+      <legend>Health Rating</legend>
+
+      <input type="range" id="healthScore" name="healthScore"
+             min="1" max="10" value="5"
+             oninput="showVal(this.value);">
+
+      <span id="healthVal">5</span>
+
+      <script>
+        function showVal(v) {
+          // updates number next to slider
+          document.getElementById("healthVal").innerText = v;
+        }
+      </script>
     </fieldset>
 
-    <!-- ── HEALTH SLIDER ─────────────────────────────────── -->
+    <!-- SYMPTOMS -->
     <fieldset>
-      <legend>Health Self-Assessment</legend>
-      <table class="form-table">
-        <tr>
-          <td class="label-cell"><label for="healthScore">Overall Health <span class="required-star">*</span></label></td>
-          <td>
-            <span class="slider-label">1 (Poor)</span>
-            <input type="range" id="healthScore" name="healthScore"
-                   min="1" max="10" value="5" step="1"
-                   oninput="document.getElementById('healthVal').textContent = this.value;"
-                   tabindex="26">
-            <span class="slider-label">10 (Excellent)</span>
-            &nbsp; Current: <strong id="healthVal">5</strong>
-            <br><span class="hint">On a scale of 1–10, how would you rate your overall health today?</span>
-          </td>
-        </tr>
-      </table>
+      <legend>Symptoms</legend>
+
+      <textarea id="symptoms" name="symptoms"
+                rows="5" cols="50"
+                placeholder="Describe symptoms..."></textarea>
+
+      <!-- might validate length later -->
     </fieldset>
 
-    <!-- ── SYMPTOMS TEXT AREA ─────────────────────────────── -->
-    <fieldset>
-      <legend>Current Symptoms / Chief Complaint</legend>
-      <table class="form-table">
-        <tr>
-          <td class="label-cell"><label for="symptoms">Describe Symptoms</label></td>
-          <td>
-            <textarea id="symptoms" name="symptoms" rows="5" cols="55"
-                      placeholder="Please describe your current symptoms or reason for visit..."
-                      tabindex="27"></textarea>
-            <br><span class="hint">Minimum 3 lines × 50 columns. Include duration and severity.</span>
-          </td>
-        </tr>
-      </table>
-    </fieldset>
-
-    <!-- ── FORM BUTTONS ───────────────────────────────────── -->
+    <!-- BUTTONS -->
     <div id="form-buttons">
-      <input type="reset"  id="btn-reset"  value="✖ CLEAR AND START OVER" tabindex="28">
-      <input type="submit" id="btn-submit" value="✔ Submit Registration"   tabindex="29">
+      <input type="reset" value="Clear">
+      <input type="submit" value="Submit">
     </div>
 
-  </form><!-- end patientForm -->
-</div><!-- end #main-content -->
+  </form>
+</div>
 
-<!-- ============================================================
-     FOOTER SECTION
-     ============================================================ -->
+<!-- ================= FOOTER ================= -->
 <div id="footer">
-  <div id="footer-left">
-    <!-- Small cross icon for footer -->
-    <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="14" cy="14" r="13" fill="#0d6efd"/>
-      <rect x="10" y="4"  width="8"  height="20" rx="2" fill="#fff"/>
-      <rect x="4"  y="10" width="20" height="8"  rx="2" fill="#fff"/>
-    </svg>
-    <span class="footer-brand">We'R'Docs Medical</span>
-  </div>
-  <div id="footer-center">
-    <button type="button" onclick="alert('For urgent medical help, call 911.\nOffice: (713) 555-9100');">
-      📞 Contact Us
-    </button>
-    &nbsp;
-    <a href="https://www.facebook.com" target="_blank" rel="noopener">Facebook</a> |
-    <a href="https://www.twitter.com"  target="_blank" rel="noopener">Twitter/X</a> |
-    <a href="https://www.instagram.com" target="_blank" rel="noopener">Instagram</a>
-  </div>
-  <div id="footer-right">
-    PO BOX 18881<br>
-    Sugar Land, TX 77496<br>
-    &copy; <span id="footer-year"></span> We'R'Docs Medical Center
-  </div>
-</div><!-- end #footer -->
+  <span>We'R'Docs Medical</span>
 
-<!-- ============================================================
-     INLINE JAVASCRIPT — dynamic date in banner & footer year
-     ============================================================ -->
+  <button onclick="showContact()">Contact</button>
+
+  <script>
+    function showContact() {
+      alert("Emergency? Call 911.\nOffice: (713) 555-9100");
+    }
+  </script>
+
+  <div>
+    Sugar Land, TX<br>
+    &copy; <span id="footer-year"></span>
+  </div>
+</div>
+
+<!-- DATE SCRIPT -->
 <script>
-  /* Dynamic day and date for banner */
-  (function() {
-    var days   = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-    var months = ["January","February","March","April","May","June",
-                  "July","August","September","October","November","December"];
-    var now    = new Date();
-    var day    = days[now.getDay()];
-    var month  = months[now.getMonth()];
-    var date   = now.getDate();
-    var year   = now.getFullYear();
-    // Ordinal suffix
-    var sfx = (date === 1 || date === 21 || date === 31) ? "st"
-            : (date === 2 || date === 22)                ? "nd"
-            : (date === 3 || date === 23)                ? "rd" : "th";
-    document.getElementById("dynamic-date").innerHTML =
-      "Today is: " + day + ", " + month + " " + date + sfx + ", " + year;
-    document.getElementById("footer-year").textContent = year;
-  })();
+  function updateDateStuff() {
+    var now = new Date();
+
+    var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+    var text = "Today is: " +
+      days[now.getDay()] + ", " +
+      months[now.getMonth()] + " " +
+      now.getDate() + ", " +
+      now.getFullYear();
+
+    var dateEl = document.getElementById("dynamic-date");
+    if (dateEl) {
+      dateEl.innerHTML = text;
+    }
+
+    // footer year
+    document.getElementById("footer-year").innerText = now.getFullYear();
+  }
 </script>
-<!-- ============================================================
-     END OF DOCUMENT: patient-form.html
-     ============================================================ -->
+
 </body>
 </html>
