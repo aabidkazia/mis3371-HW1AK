@@ -1,6 +1,6 @@
 /*
   validation.js
-  name: (seriously need to fill this in before turning in...)
+  name: Aabid Kazia
 
   handles form validation for patient-form.html
 
@@ -11,7 +11,7 @@
 */
 
 
-/* ================= MAIN FUNCTION ================= */
+/* MAIN FUNCTION  */
 function formValidation() {
 
   var form = document.patientForm; // shortcut
@@ -45,7 +45,7 @@ function formValidation() {
 }
 
 
-/* ================= USER ID ================= */
+/*  USER ID  */
 function checkUser(field) {
 
   var val = field.value.trim();
@@ -70,7 +70,7 @@ function checkUser(field) {
 }
 
 
-/* ================= PASSWORD ================= */
+/*  PASSWORD  */
 function checkPassword(p1Field, p2Field) {
 
   var p1 = p1Field.value;
@@ -93,7 +93,7 @@ function checkPassword(p1Field, p2Field) {
 }
 
 
-/* ================= NAME ================= */
+/*  NAME  */
 function checkName(field, label) {
 
   var val = field.value.trim();
@@ -115,7 +115,7 @@ function checkName(field, label) {
 }
 
 
-/* ================= DOB ================= */
+/* DOB  */
 function checkDOB(field) {
 
   var val = field.value.trim();
@@ -139,7 +139,7 @@ function checkDOB(field) {
 }
 
 
-/* ================= SSN ================= */
+/* SSN  */
 function checkSSN(field) {
 
   var val = field.value.trim();
@@ -155,7 +155,7 @@ function checkSSN(field) {
 }
 
 
-/* ================= ADDRESS ================= */
+/*  ADDRESS  */
 function checkAddress(field) {
 
   var val = field.value.trim();
@@ -171,7 +171,7 @@ function checkAddress(field) {
 }
 
 
-/* ================= CITY ================= */
+/*  CITY  */
 function checkCity(field) {
 
   var val = field.value.trim();
@@ -195,7 +195,7 @@ function checkCity(field) {
 }
 
 
-/* ================= STATE ================= */
+/*  STATE  */
 function checkState(field) {
 
   // dropdown check
@@ -209,7 +209,7 @@ function checkState(field) {
 }
 
 
-/* ================= ZIP ================= */
+/*  ZIP  */
 function checkZip(field) {
 
   var val = field.value.trim();
@@ -226,7 +226,7 @@ function checkZip(field) {
 }
 
 
-/* ================= EMAIL ================= */
+/*  EMAIL  */
 function checkEmail(field) {
 
   var val = field.value.trim();
@@ -244,7 +244,7 @@ function checkEmail(field) {
 }
 
 
-/* ================= RADIO ================= */
+/*  RADIO  */
 function checkRadio(name, msg) {
 
   var radios = document.getElementsByName(name);
