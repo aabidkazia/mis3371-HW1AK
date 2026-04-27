@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<!--
+  patient-form.html
+  Name: Aabid kazia
+  Class project – Patient Registration Form
+
+  Notes:
+  - uses validation.js for checking inputs
+  - kept styling super minimal this time
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>We'R'Docs Medical – Patient Registration</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="validation.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      margin: 20px;
+      background: #fff;
+      color: #000;
+    }
+
+    h1 { font-size: 20px; margin-bottom: 2px; }
+    h2 { font-size: 16px; margin: 16px 0 10px; }
+
+    #dynamic-date { font-size: 13px; margin-bottom: 16px; }
+
+    fieldset {
+      margin-bottom: 14px;
+      padding: 10px 14px;
+    }
+
+    legend { font-weight: bold; }
+
+    .field { margin-bottom: 10px; }
+
+    .field label {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    textarea,
+    select {
+      padding: 4px 6px;
+      font-size: 13px;
+      border: 1px solid #999;
+    }
+
+    .inline-group { display: flex; gap: 6px; }
+    .inline-group input { flex: 1; }
+    .inline-group .mi  { flex: 0 0 40px; }
+    .inline-group .zip { flex: 0 0 90px; }
+
+    .hint { font-size: 11px; color: #555; }
+
+    .radio-group { display: flex; gap: 14px; margin-top: 4px; }
+    .radio-group label { font-weight: normal; }
+
+    #form-buttons { margin-top: 10px; }
+    #form-buttons input { margin-right: 8px; padding: 4px 14px; }
+
+    #footer {
+      margin-top: 30px;
+      border-top: 1px solid #ccc;
+      padding-top: 8px;
+      font-size: 12px;
+      color: #444;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+  </style>
+</head>
+
+<body onload="initPage();">
+
+<script>
+  function initPage() {
+    if (document.patientForm && document.patientForm.userid) {
+      document.patientForm.userid.focus();
+    }
+    updateDateStuff();
+  }
+</script>
+
+<h1>We'R'Docs Medical Center</h1>
+<div id="dynamic-date"></div>
+
+<h2>New Patient Registration Form</h2>
+<p>Fill out all required fields (*). Use Tab to move between fields.</p>
+
+<form name="patientForm" onsubmit="return formValidation();" action="thankyou.html">
+
+  <!-- ACCOUNT -->
+  <fieldset>
+    <legend>Account Credentials</legend>
+
+    <div class="field">
+      <label for="userid">User ID *</label>
+      <input type="text" id="userid" name="userid"
+             maxlength="20" placeholder="5-20 characters" tabindex="1">
+      <span class="hint">Don't use your email here</span>
+    </div>
+
+    <div class="field">
+      <label for="passid">Password *</label>
+      <input type="password" id="passid" name="passid"
+             placeholder="min 7 chars" tabindex="2">
+    </div>
+
+    <div class="field">
+      <label for="passid2">Re-enter Password *</label>
+      <input type="password" id="passid2" name="passid2"
+             placeholder="match password" tabindex="3">
+    </div>
+  </fieldset>
+
+  <!-- PERSONAL INFO -->
+  <fieldset>
+    <legend>Personal Info</legend>
+
+    <div class="field">
+      <label>Full Name *</label>
+      <div class="inline-group">
+        <input type="text" id="fname" name="fname" placeholder="First" tabindex="4">
+        <input type="text" id="mi" name="mi" class="mi" maxlength="1" placeholder="MI" tabindex="5">
+        <input type="text" id="lname" name="lname" placeholder="Last" tabindex="6">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="dob">Date of Birth *</label>
+      <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" tabindex="7">
+    </div>
+
+    <div class="field">
+      <label for="ssn">SSN *</label>
+      <input type="password" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" tabindex="8">
+      <span class="hint">hidden for privacy</span>
+    </div>
+
+    <div class="field">
+      <label for="phone">Phone</label>
+      <input type="text" id="phone" name="phone" placeholder="(713) 555-1234" tabindex="9">
+    </div>
+
+    <div class="field">
+      <label for="email">Email *</label>
+      <input type="text" id="email" name="email" placeholder="name@email.com" tabindex="10">
+    </div>
+  </fieldset>
+
+  <!-- ADDRESS -->
+  <fieldset>
+    <legend>Address</legend>
+
+    <div class="field">
+      <label for="addr1">Street Address *</label>
+      <input type="text" id="addr1" name="addr1" placeholder="Street address" tabindex="11">
+    </div>
+
+    <div class="field">
+      <label for="addr2">Apt / Unit</label>
+      <input type="text" id="addr2" name="addr2" placeholder="Apt / Unit" tabindex="12">
+    </div>
+
+    <div class="field">
+      <label>City / State / ZIP *</label>
+      <div class="inline-group">
+        <input type="text" id="city" name="city" placeholder="City" tabindex="13">
+        <select id="state" name="state" tabindex="14">
+          <option value="">State</option>
+          <option value="TX" selected>TX</option>
+          <option value="CA">CA</option>
+          <option value="NY">NY</option>
+        </select>
+        <input type="text" id="zip" name="zip" class="zip" placeholder="ZIP" tabindex="15">
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- HEALTH QUESTIONS -->
+  <fieldset>
+    <legend>General Health</legend>
+
+    <div class="field">
+      <label>Gender *</label>
+      <div class="radio-group">
+        <label><input type="radio" name="gender"> Male</label>
+        <label><input type="radio" name="gender"> Female</label>
+        <label><input type="radio" name="gender"> Other</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Vaccinated *</label>
+      <div class="radio-group">
+        <label><input type="radio" name="vaccinated"> Yes</label>
+        <label><input type="radio" name="vaccinated"> No</label>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- SLIDER -->
+  <fieldset>
+    <legend>Health Rating</legend>
+
+    <div class="field">
+      <label for="healthScore">Rate your overall health (1-10):</label>
+      <input type="range" id="healthScore" name="healthScore"
+             min="1" max="10" value="5"
+             oninput="showVal(this.value);">
+      <span id="healthVal">5</span>
+    </div>
+
+    <script>
+      function showVal(v) {
+        document.getElementById("healthVal").innerText = v;
+      }
+    </script>
+  </fieldset>
+
+  <!-- SYMPTOMS -->
+  <fieldset>
+    <legend>Symptoms</legend>
+
+    <div class="field">
+      <label for="symptoms">Describe any current symptoms:</label>
+      <textarea id="symptoms" name="symptoms"
+                rows="5" cols="50"
+                placeholder="Describe symptoms..."></textarea>
+    </div>
+  </fieldset>
+
+  <!-- BUTTONS -->
+  <div id="form-buttons">
+    <input type="reset" value="Clear">
+    <input type="submit" value="Submit">
+  </div>
+
+</form>
+
+<!-- FOOTER -->
+<div id="footer">
+  <span>We'R'Docs Medical &mdash; Sugar Land, TX</span>
+  <button type="button" onclick="showContact()">Contact</button>
+  <span>&copy; <span id="footer-year"></span></span>
+</div>
+
+<script>
+  function showContact() {
+    alert("Emergency? Call 911.\nOffice: (713) 555-9100");
+  }
+
+  function updateDateStuff() {
+    var now = new Date();
+    var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+    var text = "Today is: " +
+      days[now.getDay()] + ", " +
+      months[now.getMonth()] + " " +
+      now.getDate() + ", " +
+      now.getFullYear();
+
+    var el = document.getElementById("dynamic-date");
+    if (el) el.innerHTML = text;
+
+    document.getElementById("footer-year").innerText = now.getFullYear();
+  }
+</script>
+
+</body>
+</html>
